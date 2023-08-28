@@ -17,7 +17,14 @@ const create = async (req, res) => {
     return res.status(status).json(data);
 };
 
+const getAll = async (req, res) => {
+    const { status, data } = await userService.getAll(req.body);
+    
+    return res.status(status).json(data);
+};
+
 module.exports = {
     login,
     create,
+    getAll,
 };
