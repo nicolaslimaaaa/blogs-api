@@ -16,7 +16,14 @@ const getAll = async () => {
     return { status: 200, data: categories };
 };
 
+const findById = async (id) => {
+    const category = await Category.findOne({ where: { id } });
+
+    return { status: 200, data: category };
+};
+
 module.exports = {
     create,
     getAll,
+    findById,
 };

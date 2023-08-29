@@ -20,7 +20,17 @@ const categorySchema = Joi.object({
     'name.required': '{{#label}} is required',
 });
 
+const postSchema = Joi.object({
+    title: Joi.string().required(),
+    content: Joi.string().required(),
+    categoryIds: Joi.array().items(Joi.number().min(1)).required(),
+}).messages({
+    'any.required': 'Some required fields are missing',
+    'string.empty': 'Some required fields are missing',
+});
+
 module.exports = {
     userSchema,
     categorySchema,
+    postSchema,
 };

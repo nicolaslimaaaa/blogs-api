@@ -7,7 +7,11 @@ const login = async (email, password) => {
     if (!person) return { status: 400, data: { message: 'Invalid fields' } };
     if (password !== person.password) return { status: 400, data: { message: 'Invalid fields' } };
     
-    const token = createToken({ name: person.dataValues.displayName, email });
+    const token = createToken({
+        name: person.dataValues.displayName,
+        email,
+        id: person.dataValues.id,
+    });
 
     return { status: 200, data: { token } };
 };
@@ -18,8 +22,13 @@ const create = async (user) => {
 
     const userAlreadyExists = await User.findOne({ where: { email: user.email } });
     if (userAlreadyExists) return { status: 409, data: { message: 'User already registered' } };
-    await User.create(user);
-    const token = createToken({ name: user.displayName, email: user.email });
+    const userCreated = await User.create(user);
+    
+    const token = createToken({
+        name: user.displayName,
+        email: user.email,
+        id: userCreated.dataValues.id,
+    });
 
     return { status: 201, data: { token } };
 };
