@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const categoryService = require('./category');
 const { BlogPost, PostCategory, User, Category } = require('../models');
 const schema = require('./validations/validationInputsPost');
@@ -90,10 +91,28 @@ const deletePost = async (infos) => {
     return { status: 204, data: {} };
 };
 
+const getAllBySearch = async (search) => {
+    const posts = await BlogPost.findAll({
+        where: { 
+            [Op.or]: [
+                { title: { [Op.substring]: search } },
+                { content: { [Op.substring]: search } },
+            ],
+        },
+        include: [
+            { model: User, as: 'user', attributes: { exclude: ['password'] } },
+            { model: Category, as: 'categories', through: { attributes: [] } },
+        ],
+    });
+
+    return { status: 200, data: posts };
+};
+
 module.exports = {
     createPost,
     getAll,
     getById,
     updateInfos,
     deletePost,
+    getAllBySearch,
 };
