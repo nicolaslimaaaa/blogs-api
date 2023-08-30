@@ -57,8 +57,10 @@ const updateInfos = async (infos) => {
     if (error) return { status: error.status, data: { message: error.message } };
 
     const postExists = await getById(id);
-    if (!postExists) return { status: postExists.status, data: { message: postExists.data } };
-    console.log(postExists);
+    if (postExists.data.message === 'Post does not exist') {
+        return { status: postExists.status, data: postExists.data };
+    }
+    
     if (postExists.data.dataValues.userId !== Number(userId)) {
         return { status: 401, data: { message: 'Unauthorized user' } };
     }
@@ -69,9 +71,29 @@ const updateInfos = async (infos) => {
     return { status: 200, data: postExists.data };
 };
 
+const deletePost = async (infos) => {
+    const { id, userId } = infos;
+
+    const postExists = await getById(id);
+    if (postExists.data.message === 'Post does not exist') {
+        return { status: postExists.status, data: postExists.data };
+    }
+    
+    if (postExists.data.dataValues.userId !== Number(userId)) {
+        return { status: 401, data: { message: 'Unauthorized user' } };
+    }
+
+    await BlogPost.destroy({
+        where: { id },
+    });
+
+    return { status: 204, data: {} };
+};
+
 module.exports = {
     createPost,
     getAll,
     getById,
     updateInfos,
+    deletePost,
 };
