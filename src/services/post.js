@@ -50,8 +50,28 @@ include: [
     return { status: 200, data: post };
 };
 
+const updateInfos = async (infos) => {
+    const { title, content, id, userId } = infos;
+
+    const error = schema.validationInputsUpdatePost({ title, content });
+    if (error) return { status: error.status, data: { message: error.message } };
+
+    const postExists = await getById(id);
+    if (!postExists) return { status: postExists.status, data: { message: postExists.data } };
+    console.log(postExists);
+    if (postExists.data.dataValues.userId !== Number(userId)) {
+        return { status: 401, data: { message: 'Unauthorized user' } };
+    }
+    postExists.data.title = title;
+    postExists.data.content = content;
+    await postExists.data.save();
+            
+    return { status: 200, data: postExists.data };
+};
+
 module.exports = {
     createPost,
     getAll,
     getById,
+    updateInfos,
 };
