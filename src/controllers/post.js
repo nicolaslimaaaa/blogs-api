@@ -1,5 +1,6 @@
 const { postService } = require('../services');
-const { updateInfos } = require('../services/updateInfos');
+const { updateInfos } = require('../services/updatePostInfos');
+const { getAllBySearch } = require('../services/getAllPostsBySearch');
 
 const createPost = async (req, res) => {
     const { status, data } = await postService.createPost(req.body);
@@ -38,10 +39,10 @@ const deletePost = async (req, res) => {
     return res.status(status).json(data);
 };
 
-const getAllBySearch = async (req, res) => {
+const getAllByQuery = async (req, res) => {
     const { q: search } = req.query;
     
-    const { status, data } = await postService.getAllBySearch(search);
+    const { status, data } = await getAllBySearch(search);
 
     res.status(status).json(data);
 };
@@ -52,5 +53,5 @@ module.exports = {
     getById,
     updatePost,
     deletePost,
-    getAllBySearch,
+    getAllByQuery,
 };

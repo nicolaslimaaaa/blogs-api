@@ -1,9 +1,10 @@
 const { userService } = require('../services');
+const { login } = require('../services/login');
 
-const login = async (req, res) => {
+const userLogin = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const { status, data } = await userService.login(email, password);
+        const { status, data } = await login(email, password);
 
         res.status(status).json(data);
     } catch (error) {
@@ -39,7 +40,7 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-    login,
+    userLogin,
     create,
     getAll,
     getById,
