@@ -1,4 +1,5 @@
 const { postService } = require('../services');
+const { updateInfos } = require('../services/updateInfos');
 
 const createPost = async (req, res) => {
     const { status, data } = await postService.createPost(req.body);
@@ -19,11 +20,11 @@ const getById = async (req, res) => {
     return res.status(status).json(data);
 };
 
-const updateInfos = async (req, res) => {
+const updatePost = async (req, res) => {
     const { id } = req.params;
     const { title, content, tokenInfo: { id: userId } } = req.body;
 
-    const { status, data } = await postService.updateInfos({ title, content, id, userId });
+    const { status, data } = await updateInfos({ title, content, id, userId });
 
     return res.status(status).json(data);
 };
@@ -49,7 +50,7 @@ module.exports = {
     createPost,
     getAll,
     getById,
-    updateInfos,
+    updatePost,
     deletePost,
     getAllBySearch,
 };
